@@ -1,0 +1,22 @@
+# Python bytecode (archivos compilados)
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Base de Datos local
+db.sqlite3
+
+# Entornos virtuales
+venv/
+env/
+.env
+
+# Archivos de medios (las subidas de archivos que hagamos)
+media/uploads/
+
+# Archivos del sistema (Mac/Windows)
+.DS_Store
+Thumbs.db
+
+# Modelos de IA pesados (opcional, si prefieres subirlos a Drive)
+# core_forecast/ml_logic/assets/*.keras
