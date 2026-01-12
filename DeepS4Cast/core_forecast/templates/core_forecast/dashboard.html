@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,12 +7,31 @@
     <title>DeepS4Cast | Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <style>
+        .map-container { position: relative; display: inline-block; width: 100%; }
+        .map-img { width: 100%; border-radius: 8px; }
+        .dot {
+            position: absolute;
+            width: 12px; height: 12px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            border: 2px solid white;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px rgba(255,0,0,0.8);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    </style>
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-dark bg-dark mb-4 shadow">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">🛰️ DeepS4Cast - Lima, Perú</span>
+            <span class="navbar-brand mb-0 h1">🛰️ DeepS4Cast - Monitoreo Ionosférico</span>
         </div>
     </nav>
 
@@ -20,13 +40,38 @@
             <div class="col-md-3">
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">Controles</h5>
-                        <p class="small text-muted">Configuración del pronóstico Bi-LSTM</p>
+                        <h5 class="card-title">Configuración</h5>
                         <hr>
-                        <button class="btn btn-primary w-100 mb-2">🔄 Actualizar Datos</button>
-                        <button class="btn btn-outline-success w-100">📥 Exportar CSV</button>
+                        <form method="GET">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Estación:</label>
+                                <select name="estacion" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="Jicamarca" {% if estacion_sel == 'Jicamarca' %}selected{% endif %}>Jicamarca</option>
+                                    <option value="Huancayo" {% if estacion_sel == 'Huancayo' %}selected{% endif %}>Huancayo</option>
+                                    <option value="Piura" {% if estacion_sel == 'Piura' %}selected{% endif %}>Piura</option>
+                                    <option value="Cuzco" {% if estacion_sel == 'Cuzco' %}selected{% endif %}>Cuzco</option>
+                                    <option value="Pucallpa" {% if estacion_sel == 'Pucallpa' %}selected{% endif %}>Pucallpa</option>
+                                    <option value="Ayacucho" {% if estacion_sel == 'Ayacucho' %}selected{% endif %}>Ayacucho</option>
+                                    <option value="Tacna" {% if estacion_sel == 'Tacna' %}selected{% endif %}>Tacna</option>
+                                    <option value="Iquitos" {% if estacion_sel == 'Iquitos' %}selected{% endif %}>Iquitos</option>
+                                </select>
+                            </div>
+                        </form>
+
+                        <div class="mt-4 text-center">
+                            <h6 class="small fw-bold">Ubicación Estación</h6>
+                            <div class="map-container">
+                                <img src="{% static 'core_forecast/img/peru_map.png' %}" class="map-img" alt="Mapa del Perú">
+                                {% if coord %}
+                                <div class="dot" style="top: {{ coord.top }}%; left: {{ coord.left }}%;"></div>
+                                {% endif %}
+                            </div>
+                            <p class="text-muted small mt-2">Coordenadas del sensor activas</p>
+                        </div>
                     </div>
                 </div>
+                
+                <button class="btn btn-outline-success w-100 shadow-sm">📥 Exportar Reporte</button>
             </div>
 
             <div class="col-md-9">
@@ -34,6 +79,9 @@
                     <div class="card-body">
                         {{ plot_div|safe }}
                     </div>
+                </div>
+                <div class="alert alert-info mt-3 small shadow-sm">
+                    <strong>Nota técnica:</strong> La predicción se basa en una ventana de observación de 60 minutos (Lookback) utilizando una arquitectura Bi-LSTM.
                 </div>
             </div>
         </div>
