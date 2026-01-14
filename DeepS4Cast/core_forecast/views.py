@@ -29,13 +29,13 @@ def dashboard_estatico(request):
 
 
     estaciones_coords = {
-        'Jicamarca': {'top': 63, 'left': 37},
+        'Jicamarca': {'top': 63, 'left': 41},
         'Huancayo':  {'top': 63, 'left': 49},
-        'Piura':     {'top': 31, 'left': 13},
+        'Piura':     {'top': 31, 'left': 23},
         'Cuzco':     {'top': 70, 'left': 70},
         'Pucallpa':  {'top': 56, 'left': 62},
         'Ayacucho':  {'top': 76, 'left': 56},
-        'Tacna':     {'top': 91, 'left': 83},
+        'Tacna':     {'top': 91, 'left': 73},
         'Iquitos':   {'top': 30, 'left': 50},
     }
 
