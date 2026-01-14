@@ -86,9 +86,15 @@ body {
 }
 
 /* Responsive: en pantallas pequeñas el subtítulo se oculta */
-@media (max-width: 768px) {
-    .navbar-subtitle {
-        display: none;
+@media (max-width: 992px) {
+    .map-container {
+        max-height: 200px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .map-container {
+        max-height: 300px;
     }
 }
 /* Cards */
@@ -141,12 +147,17 @@ label,
    ========================= */
 .map-container {
     position: relative;
-    display: inline-block;
     width: 100%;
+    text-align: center;
 }
+
 .map-img {
     width: 100%;
-    border-radius: 8px;
+    max-height: 220px;        /* 🔑 control visual AQUÍ */
+    height: auto;             /* 🔑 evita recorte */
+    object-fit: contain;
+    display: inline-block;
+    border-radius: 12px;
 }
 .dot {
     position: absolute;
