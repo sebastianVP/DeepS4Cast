@@ -1,17 +1,32 @@
 # core_forecast/views.py
 from django.shortcuts import render
+from django.conf import settings
+
 import plotly.graph_objects as go
 from plotly.offline import plot
 import numpy as np
+import os
 
 from core_forecast.utils.s4_parser import parse_s4_array
 
+# ======================================================
+# FUNCIÓN: NIVEL DE CENTELLEO
+# ======================================================
+def nivel_centelleo(s4_max):
+    if s4_max < 0.3:
+        return "Bajo", "success"
+    elif s4_max < 0.6:
+        return "Moderado", "warning"
+    else:
+        return "Severo", "danger"
 
 def dashboard_estatico(request):
     # =========================
     # 1. ESTACIÓN SELECCIONADA
     # =========================
     estacion_sel = request.GET.get('estacion', 'Jicamarca')
+    modelo_sel = request.GET.get('modelo', 'simple')
+
 
     estaciones_coords = {
         'Jicamarca': {'top': 63, 'left': 37},
@@ -34,10 +49,31 @@ def dashboard_estatico(request):
     "Tacna",
     "Iquitos"
     ]
+
+    modelos_disponibles = {
+        'simple': 'LSTM Simple',
+        'stacked': 'LSTM Stacked',
+        'bilstm': 'Bi-LSTM'
+    }
+
+
     coord = estaciones_coords.get(estacion_sel)
 
+    # ======================================================
+    # 2. RUTA DEL MODELO (PREPARADA PARA CARGA REAL)
+    # ======================================================
+    model_path = os.path.join(
+        settings.BASE_DIR,
+        'core_forecast',
+        'models_lstm',
+        estacion_sel.lower(),
+        f'{modelo_sel}.h5'
+    )
+
+    # (Más adelante aquí cargarás el modelo real)
+
     # =========================
-    # VARIABLES DE CONTROL
+    # 3. VARIABLES DE CONTROL
     # =========================
     s4_pasado = None
     alerta_observada = False
@@ -45,7 +81,7 @@ def dashboard_estatico(request):
     error_msg = None
 
     # =========================
-    # 2. INPUT DEL USUARIO
+    # 4. INPUT DEL USUARIO
     # =========================
     if request.method == "POST":
         try:
@@ -64,7 +100,7 @@ def dashboard_estatico(request):
             error_msg = str(e)
 
     # =========================
-    # 3. DATOS SIMULADOS
+    # 5. DATOS SIMULADOS (PLACEHOLDER DEL MODELO)
     # =========================
     if s4_pasado is None:
         np.random.seed(hash(estacion_sel) % 100)
@@ -78,14 +114,21 @@ def dashboard_estatico(request):
 
     alerta_pronostico = np.max(s4_futuro) >= 0.6
 
+
+    # ======================================================
+    # 6. NIVELES TEXTUALES
+    # ======================================================
+    nivel_obs_txt, nivel_obs_color = nivel_centelleo(np.max(s4_pasado))
+    nivel_pron_txt, nivel_pron_color = nivel_centelleo(np.max(s4_futuro))
+
     # =========================
-    # 4. COLORES SEGÚN ALERTA
+    # 7. COLORES SEGÚN ALERTA
     # =========================
     color_pasado = '#dc143c' if alerta_observada else '#4682b4'   # rojo / azul
     color_futuro = '#dc143c' if alerta_pronostico else '#2e8b57' # rojo / verde
 
     # =========================
-    # 5. GRÁFICO PLOTLY
+    # 8. GRÁFICO PLOTLY
     # =========================
     fig = go.Figure()
 
@@ -107,6 +150,15 @@ def dashboard_estatico(request):
         marker=dict(color=color_futuro)
     ))
 
+    # Línea crítica S4 = 0.6
+    fig.add_hline(
+        y=0.6,
+        line_dash="dot",
+        line_color="red",
+        annotation_text="Umbral severo S4 = 0.6",
+        annotation_position="top left"
+    )
+
     fig.update_layout(
         title=f'Análisis de Centelleo Ionosférico – Estación {estacion_sel}',
         xaxis_title='Tiempo (minutos)',
@@ -118,16 +170,23 @@ def dashboard_estatico(request):
     plot_div = plot(fig, output_type='div', include_plotlyjs=True)
 
     # =========================
-    # 6. CONTEXTO PARA EL TEMPLATE
+    # 9. CONTEXTO PARA EL TEMPLATE
     # =========================
     context = {
         'plot_div': plot_div,
         'estacion_sel': estacion_sel,
+        'modelo_sel': modelo_sel,
+        'modelos': modelos_disponibles,
         'coord': coord,
         'estaciones':estaciones,
         # alertas
         'alerta_observada': alerta_observada,
         'alerta_pronostico': alerta_pronostico,
+        
+        'nivel_obs_txt': nivel_obs_txt,
+        'nivel_obs_color': nivel_obs_color,
+        'nivel_pron_txt': nivel_pron_txt,
+        'nivel_pron_color': nivel_pron_color,
 
         'error_msg': error_msg
     }
