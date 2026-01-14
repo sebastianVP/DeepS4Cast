@@ -1,0 +1,15 @@
+body[data-theme="modern"] {
+    --bg-main: #0f172a;
+    --card-bg: #020617;
+    --text-main: #e5e7eb;
+
+    --low: #22c55e;
+    --moderate: #facc15;
+    --severe: #ef4444;
+
+    --shadow-soft: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+body[data-theme="modern"] .navbar {
+    background: linear-gradient(90deg, #2563eb, #9333ea);
+}

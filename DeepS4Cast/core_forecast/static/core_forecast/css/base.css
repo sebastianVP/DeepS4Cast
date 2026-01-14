@@ -1,0 +1,172 @@
+/* =========================
+   VARIABLES DE TEMA
+   ========================= */
+
+:root {
+    --bg-main: #f4f6f8;
+    --bg-card: #ffffff;
+    --bg-navbar: #0b3c5d;
+
+    --text-main: #1f2933;
+    --text-secondary: #374151;
+    --text-inverse: #ffffff;
+
+    --alert-info-bg: #e8f1f8;
+    --alert-info-text: #0b3c5d;
+
+    --alert-warning-bg: #fff4e5;
+    --alert-warning-text: #92400e;
+
+    --alert-danger-bg: #fdecea;
+    --alert-danger-text: #7f1d1d;
+}
+
+/* =========================
+   TEMA MODERNO / TECNOLÓGICO
+   ========================= */
+body[data-theme="modern"] {
+    --bg-main: #0f172a;
+    --bg-card: #020617;
+    --bg-navbar: #020617;
+
+    --text-main: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --text-inverse: #e5e7eb;
+
+    --alert-info-bg: #020617;
+    --alert-info-text: #38bdf8;
+
+    --alert-warning-bg: #1e1b4b;
+    --alert-warning-text: #facc15;
+
+    --alert-danger-bg: #450a0a;
+    --alert-danger-text: #fca5a5;
+}
+
+/* =========================
+   APLICACIÓN GLOBAL
+   ========================= */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* =========================
+   NAVBAR – TÍTULO PRINCIPAL
+   ========================= */
+
+.navbar {
+    background-color: var(--bg-navbar) !important;
+}
+
+/* =========================
+   NAVBAR – TÍTULO Y SUBTÍTULO (HORIZONTAL)
+   ========================= */
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #ffffff !important;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.navbar-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.navbar-subtitle {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Responsive: en pantallas pequeñas el subtítulo se oculta */
+@media (max-width: 768px) {
+    .navbar-subtitle {
+        display: none;
+    }
+}
+/* Cards */
+.card {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: none;
+}
+.card-title,
+.card-body,
+.card h5,
+.card h6 {
+    color: var(--text-main);
+}
+
+/* Formularios */
+label,
+.form-label {
+    color: var(--text-secondary);
+}
+.form-control,
+.form-select {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    border: 1px solid #9ca3af;
+}
+
+/* Alerts */
+.alert-info {
+    background-color: var(--alert-info-bg);
+    color: var(--alert-info-text);
+}
+.alert-warning {
+    background-color: var(--alert-warning-bg);
+    color: var(--alert-warning-text);
+}
+.alert-danger {
+    background-color: var(--alert-danger-bg);
+    color: var(--alert-danger-text);
+}
+
+/* Texto pequeño */
+.small,
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* =========================
+   MAPA Y DOTS (SIN CAMBIOS)
+   ========================= */
+.map-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.map-img {
+    width: 100%;
+    border-radius: 8px;
+}
+.dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid white;
+    transform: translate(-50%, -50%);
+    animation: pulse 1.5s infinite;
+}
+.dot-green {
+    background-color: #22c55e;
+    box-shadow: 0 0 8px rgba(34,197,94,0.8);
+}
+.dot-red {
+    background-color: #ef4444;
+    box-shadow: 0 0 8px rgba(239,68,68,0.8);
+}
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}

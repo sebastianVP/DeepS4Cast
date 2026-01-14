@@ -1,0 +1,15 @@
+body[data-theme="scientific"] {
+    --bg-main: #f3f4f6;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+
+    --low: #2e8b57;
+    --moderate: #f0ad4e;
+    --severe: #b91c1c;
+
+    --shadow-soft: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+body[data-theme="scientific"] .dot {
+    animation: none;
+}
